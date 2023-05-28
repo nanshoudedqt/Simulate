@@ -1,2 +1,2 @@
 # Simulate
-借助Eigen库和UEngine实现隐式欧拉模拟质点弹簧系统，其中UEngine主要发挥了.obj文件读取和可视化的功能
+物理仿真的尝试

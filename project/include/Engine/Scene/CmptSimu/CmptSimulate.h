@@ -42,7 +42,7 @@ namespace Ubpa {
 		void SetStiff(float stiff) { CastTo<MassSpring>(primitive)->GetSimu()->SetStiff(stiff); };
 		void SetExtForce(float k) const { CastTo<MassSpring>(primitive)->GetSimu()->SetExtForce(k); }
 		void SetFix(std::vector<unsigned>& fix) { fix_id = fix; };
-		void SetLeftFix() {CastTo<MassSpring>(primitive)->GetSimu()->SetLeftFix();};
+		void SetLeftFix() {};
 		void SetParam(const char* key, int value) {
 			CastTo<MassSpring>(primitive)->GetSimu()->SetParam(key, value);
 		}

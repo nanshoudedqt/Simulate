@@ -79,7 +79,6 @@ namespace Ubpa {
 		const float GetTimeStep() { return h; };
 		void SetTimeStep(float k) { h = k; Init();};
 
-		// patched by libre liu..
 		const std::vector<unsigned>& GetFix() {
 			static std::vector<unsigned> ret = std::vector<unsigned>(this->fixed_id.begin(), this->fixed_id.end());
 			return ret;
@@ -122,7 +121,7 @@ namespace Ubpa {
 		}
 
 	private:
-		float h = 0.03f;  //²½³¤
+		float h = 0.03f;  //Â²Â½Â³Â¤
 		float ext_force;
 		float stiff;
 		float curr_time;

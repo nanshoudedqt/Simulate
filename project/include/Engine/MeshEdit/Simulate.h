@@ -121,7 +121,7 @@ namespace Ubpa {
 		}
 
 	private:
-		float h = 0.03f;  //²½³¤
+		float h = 0.03f;
 		float ext_force;
 		float stiff;
 		float curr_time;

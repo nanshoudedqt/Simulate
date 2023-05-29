@@ -68,8 +68,8 @@ bool Simulate::Run() {
 void Ubpa::Simulate::updateKMat() {
 
 	size_t total_points = positions.size();
-	size_t fixed_points = fixed_id.size();
-	size_t free_points = total_points - fixed_points;
+	//size_t fixed_points = fixed_id.size();
+	size_t free_points = total_points;
 
 	// build K_mat
 	this->K_mat = SparseMatrix<float>(3 * free_points, 3 * total_points);
@@ -78,9 +78,6 @@ void Ubpa::Simulate::updateKMat() {
 
 	int current_row = 0;
 	for (size_t i = 0; i < total_points; i++) {
-		if (fixed_id.count(i) > 0) {
-			continue;
-		}
 		K_mat.insert(current_row, i) = 1;
 		xf_to_x[current_row] = i;
 		current_row++;
@@ -89,29 +86,6 @@ void Ubpa::Simulate::updateKMat() {
 	K_mat.makeCompressed();
 }
 
-void Ubpa::Simulate::SetLeftFix()
-{
-	//固定网格x坐标最小点
-	fixed_id.clear();
-	double x = 100000;
-	for (int i = 0; i < positions.size(); i++)
-	{
-		if (positions[i][0] < x)
-		{
-			x = positions[i][0];
-		}
-	}
-
-	for (int i = 0; i < positions.size(); i++)
-	{
-		if (abs(positions[i][0] - x) < 1e-5)
-		{
-			fixed_id.insert(i);
-		}
-	}
-
-	Init();
-}
 
 float Simulate::getOrigLen(int i, int j) {
 	assert(i != j);
@@ -211,8 +185,7 @@ void Simulate::SimulateOnce() {
 	}
 
 	size_t total_points = positions.size();
-	size_t fixed_points = fixed_id.size();
-	size_t free_points = total_points - fixed_points;
+	size_t free_points = total_points;
 
 	// env vars
 	std::vector<vecf3> f_int(total_points, vecf3(0, 0, 0));
@@ -243,8 +216,6 @@ void Simulate::SimulateOnce() {
 	//VectorXf b_vec = x_vec - K_mat.transpose() * K_mat * x_vec;
 
 
-	//ignore xf stuff for now..
-	assert(fixed_points == 0);
 	SparseMatrix<float> coeff_mat(3 * total_points, 3 * total_points);
 	// the rhs vector
 	VectorXf rhs_vec(3 * total_points);

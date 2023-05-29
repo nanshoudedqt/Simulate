@@ -6,7 +6,7 @@
 #include <UGM/UGM>
 #include <set>
 
-namespace Ubpa {
+namespace  Ubpa{
 	class Simulate : public HeapObj {
 	public:
 		Simulate(const std::vector<pointf3>& plist,
@@ -79,21 +79,10 @@ namespace Ubpa {
 		const float GetTimeStep() { return h; };
 		void SetTimeStep(float k) { h = k; Init();};
 
-		const std::vector<unsigned>& GetFix() {
-			static std::vector<unsigned> ret = std::vector<unsigned>(this->fixed_id.begin(), this->fixed_id.end());
-			return ret;
-		};
-		void SetFix(const std::vector<unsigned>& f) { 
-			this->fixed_id.clear();
-			for (auto id : f) {
-				this->fixed_id.insert(id);
-			}
-			Init();
-		};
 		const std::vector<pointf3>& GetVelocity() { return velocity; };
 		//void SetVelocity(const std::vector<pointf3>& v) { velocity = v; };
 
-		void SetLeftFix();
+
 
 	private:
 		// kernel part of the algorithm
@@ -121,11 +110,10 @@ namespace Ubpa {
 		}
 
 	private:
-		float h = 0.03f;
+		float h = 0.03f;  //步长
 		float ext_force;
 		float stiff;
 		float curr_time;
-		std::set<unsigned> fixed_id;  //fixed point id
 		std::map<unsigned, unsigned> xf_to_x;
 		int boundary_radius = 0;
 		int log_verbosity = 5;

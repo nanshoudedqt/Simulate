@@ -6,7 +6,7 @@
 #include <UGM/UGM>
 #include <set>
 
-namespace  Ubpa{
+namespace  Ubpa {
 	class Simulate : public HeapObj {
 	public:
 		Simulate(const std::vector<pointf3>& plist,
@@ -26,26 +26,22 @@ namespace  Ubpa{
 		};
 	public:
 		static const Ptr<Simulate> New(const std::vector<pointf3>& plist,
-			const std::vector<unsigned> &elist) {
+			const std::vector<unsigned>& elist) {
 			return Ubpa::New<Simulate>(plist, elist);
 		}
 	public:
 		// clear cache data
 		void Clear();
-
-		// init cache data (eg. half-edge structure) for Run()
 		bool Init();
-		//bool Init();
-
-		// call it after Init()
 		bool Run();
-		
+
 		const std::vector<pointf3>& GetPositions() const { return positions; };
 
 		const float GetStiff() { return stiff; };
-		void SetStiff(float k) { stiff = k; Init();};
+		void SetStiff(float k) { stiff = k; Init(); };
 		const float GetExtForce() { return ext_force; }
-		void SetExtForce(float k) { ext_force = k; 
+		void SetExtForce(float k) {
+			ext_force = k;
 			Init();
 		};
 
@@ -67,7 +63,7 @@ namespace  Ubpa{
 				if (i == 0) {
 					this->f_ext[i] = vecf3{ 0, ext_force * coff, 0 };
 				}
-				else if(i == positions.size() - 1){
+				else if (i == positions.size() - 1) {
 					this->f_ext[i] = vecf3{ 0, ext_force * coff, 0 };
 				}
 				else {
@@ -77,16 +73,15 @@ namespace  Ubpa{
 		}
 
 		const float GetTimeStep() { return h; };
-		void SetTimeStep(float k) { h = k; Init();};
+		void SetTimeStep(float k) { h = k; Init(); };
 
 		const std::vector<pointf3>& GetVelocity() { return velocity; };
-		//void SetVelocity(const std::vector<pointf3>& v) { velocity = v; };
 
 
 
 	private:
-		// kernel part of the algorithm
-		void SimulateOnce();
+		void SimulateOnceMin();
+		void SimulateOnceNR();
 		Eigen::Matrix3f calcNablaFintComponent(int i, int j, const std::vector<pointf3>& pos_step_k);
 		float calcResidual(const std::vector<vecf3>& f_int, const Eigen::VectorXf& x_new, const std::vector<pointf3>& pos_step_k);
 		float getOrigLen(int i, int j);
@@ -105,7 +100,7 @@ namespace  Ubpa{
 			return Eigen::Vector3f{ v_res[0], v_res[1], v_res[2] };
 		}
 
-		inline Eigen::Vector3f calcG(int i, const Eigen::Vector3f &x_n, const Eigen::Vector3f& f_int) {
+		inline Eigen::Vector3f calcG(int i, const Eigen::Vector3f& x_n, const Eigen::Vector3f& f_int) {
 			return Eigen::Matrix3f::Identity() * this->mass[i] * (x_n - calcY(i)) - h * h * f_int;
 		}
 
@@ -114,11 +109,10 @@ namespace  Ubpa{
 		float ext_force;
 		float stiff;
 		float curr_time;
-		std::map<unsigned, unsigned> xf_to_x;
 		int boundary_radius = 0;
 		int log_verbosity = 5;
 		Eigen::SparseMatrix<float> K_mat;
-		
+
 
 		//mesh data
 		std::vector<unsigned> edgelist;
@@ -142,6 +136,6 @@ namespace  Ubpa{
 		std::vector<float> mass;
 		std::vector<vecf3> f_ext;
 
-		
+
 	};
 }
